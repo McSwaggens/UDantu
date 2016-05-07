@@ -1,7 +1,9 @@
-*
+/*
+/app/*
+/api/*
+/var/*
 
 !.gitignore
-!.git/
 !api/libdir
 !app/apt-get
 !app/cd
@@ -12,7 +14,5 @@
 !app/ls
 !app/nic
 !startup
-!var/
+!var/libdir
 !xsh
-
-!*/
