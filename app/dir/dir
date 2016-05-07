@@ -1,0 +1,3 @@
+os.loadAPI("/api/libdir");
+dir = libdir.GetWorkingDirectory();
+print (dir);

@@ -35,23 +35,55 @@ function ParseInput()
                 print ("[ERROR] NO INPUT PROGRAM DEFINED!");
                 else
                 print ("Removing " .. args[2] .. "...");
+                UninstallProgram(args[2]);
             end
         end
     end
 end
 
+function string.starts(String,Start)
+   return string.sub(String,1,string.len(Start))==Start
+end
+
+function string.ends(String,End)
+   return End=='' or string.sub(String,-string.len(End))==End
+end
+
 function InstallProgram(ProgramName)
-    path = "/Applications/" .. ProgramName;
-    if (fs.exists(path)) then
-        --If the program already exists, uninstall it and continue with the installation...
-        print ("Application " .. ProgramName .. " already exists, reinstalling...");
-        fs.delete(path);
-        print ("Removed " .. path .. "...");
+    path = "/app/" .. ProgramName;
+    type = "Application";
+    isLib = false;
+    
+    if (not fs.exists("/app/")) then
+        fs.makeDir("/app/");
     end
     
+    if (string.starts(ProgramName, "lib")) then
+        path = "/api/";
+        if (not fs.exists(path)) then
+            fs.makeDir(path);
+        end
+        type = "Library";
+        isLib = true;
+    end
+    
+    if (isLib) then
+        if (fs.exists(path .. ProgramName)) then
+            --If the program already exists, uninstall it and continue with the installation...
+            print (type .. " " .. ProgramName .. " already exists, reinstalling...");
+            fs.delete(path .. ProgramName);
+            print ("Removed " .. path .. ProgramName .. "...");
+        end
+        else
+            if (fs.exists(path)) then
+                fs.delete(path);
+                print ("Removed " .. path .. "...");
+            end
+    end
+        
     
     --Check if the program is still installed
-    if (fs.exists(path)) then
+    if (fs.exists(path) and not isLib) then
         --For some reason the program was unable to remove the program for reinstalling it.
         print ("An unexpected error occured when initializing installer: failed to remove directory.");
     else
@@ -114,6 +146,29 @@ function InstallProgram(ProgramName)
             print ("No repository servers found");
         end
     end
+end
+
+function UninstallProgram(ProgramName)
+    path = "/app/";
+    type = "Application";
+    isLib = false;
+    
+    if (not fs.exists("/app/")) then
+        fs.makeDir("/app/");
+    end
+    
+    if (string.starts(ProgramName, "lib")) then
+        path = "/api/";
+        if (not fs.exists(path)) then
+            fs.makeDir(path);
+        end
+        type = "Library";
+        isLib = true;
+    end
+    
+    fs.delete(path .. ProgramName);
+    
+    print (type .. " " .. ProgramName ..  " was successfully uninstalled...");
 end
 
 function findRepositoryServers()
