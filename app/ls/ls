@@ -1,0 +1,27 @@
+os.loadAPI("/api/libdir");
+dir = libdir.GetWorkingDirectory();
+contents = fs.list(dir);
+
+directories = {};
+files = {};
+
+for i=1,#contents do
+    if (fs.isDir(dir .. contents[i])) then
+        table.insert(directories, contents[i]);
+    else
+        table.insert(files, contents[i]);
+    end
+end
+
+for i=1,#directories do
+    term.setTextColor(colors.blue);
+    write (directories[i] .. "/\t");
+    term.setTextColor(colors.white);
+end
+
+for i=1,#files do
+    term.setTextColor(colors.green);
+    write (files[i] .. "\t");
+    term.setTextColor(colors.white);
+end
+print ("");

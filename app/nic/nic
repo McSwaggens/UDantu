@@ -1,0 +1,3 @@
+args = { ... }
+print ("Opened " .. args[1] .. " socket")
+rednet.open(args[1])
